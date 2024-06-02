@@ -1,0 +1,66 @@
+<% layout('layouts/boilerplate') -%>
+
+    <!-- <div>
+        <h1>Edit from</h1>
+        <form action="/listings/<%=listing._id%>?_method=PUT" method="POST">
+            <input type="text" name="title" value="<%=listing.title%>"> <br>
+            <textarea name="description" id="" cols="40" rows="10"
+                placeholder="desscription"><%=listing.description%></textarea> <br>
+            <input type="image" name="image" placeholder="" image> <br>
+            <input type="number" name="price" placeholder="price" value="<%=listing.price%>"> <br>
+            <input type="text" name="location" placeholder="Location" value="<%=listing.location%>"> <br>
+            <input type="text" name="country" placeholder="country" value="<%=listing.country%>"> <br>
+            <button>Submit</button>
+        </form>
+    </div> -->
+
+
+
+
+
+
+
+
+
+
+
+
+    <form action="/listings/<%=listing._id%>?_method=PUT" method="POST" novalidate class="needs-validation" >
+
+    <div class="col-md-8 mb-2">
+        <label for="title" class="form-label">Title</label>
+        <input required type="text" class="form-control" id="title" name="title" placeholder="Enter Your title ...."
+            value="<%=listing.title%>">
+    </div>
+    <div class="col-md-8 mb-2">
+        <label for="description" class="form-label">Description</label>
+        <textarea required class="form-control" id="description" rows="3" name="description"><%=listing.description%></textarea>
+    </div>
+    <div class="col-md-8 mb-2">
+        <label for="image" class="form-label">Image Link</label>
+        <input required type="text" class="form-control" id="image" name="image.url" placeholder="Enter the image URL" value="<%=listing.image.url%>">
+    </div>
+    <div class="col-md-8 mb-2">
+        <label for="image" class="form-label">Image Filename</label>
+        <input type="text" class="form-control" id="image" name="image.filename" placeholder="Enter the image URL" value="<%=listing.image.filename%>">
+    </div>
+    <div class="col-md-8 mb-6">
+        <label for="price" class="form-label">Price</label>
+        <input required type="number" class="form-control" id="price" name="price" value="<%=listing.price%>">
+    </div>
+
+    <div class="col-md-8 mb-2">
+        <label for="country" class="form-label">Country</label>
+        <input required type="text" class="form-control" id="country" name="country" placeholder="India"
+            value="<%=listing.country%>">
+    </div>
+    <div class="col-md-8 mb-2">
+        <label for="location" class="form-label">Location</label>
+        <input required type="text" class="form-control" id="location" name="location" placeholder="Jaipur/Rajasthan"
+            value="<%=listing.location%>">
+    </div>
+
+    <div class="col-12 mb-2">
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </div>
+    </form>

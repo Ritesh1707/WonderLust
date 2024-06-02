@@ -1,0 +1,36 @@
+<% layout('layouts/boilerplate') -%>
+
+    <form action="/listings" method="POST" novalidate class="row g-3 needs-validation" >
+        <div class="col-md-8 mb-2">
+            <label for="title" class="form-label">Title</label>
+            <input required type="text" class="form-control" id="title" name="title" placeholder="Enter Your title ....">
+        </div>
+        <div class="col-md-8 mb-2">
+            <label for="description" class="form-label">Description</label>
+            <input required type="text" class="form-control" id="description" name="description">
+        </div>
+        <div class="col-md-8 mb-2">
+            <label for="image" class="form-label">Image Link</label>
+            <input type="text" class="form-control" id="image.url" name="image[url]" placeholder="Enter the image URL">
+        </div>
+        <div class="col-md-8 mb-2">
+            <label for="image" class="form-label">Image filename</label>
+            <input type="text" class="form-control" id="image.filename" name="image[filename]" placeholder="Enter the image URL">
+        </div>
+        <div class="col-md-8 mb-2">
+            <label for="price" class="form-label">Price</label>
+            <input required type="number" class="form-control" id="price" name="price">
+        </div>
+        <div class="col-md-8 mb-2">
+            <label for="country" class="form-label">Country</label>
+            <input required type="text" class="form-control" id="country" name="country" placeholder="India">
+        </div>
+        <div class="col-md-8 mb-2">
+            <label for="location" class="form-label">Location</label>
+            <input required type="text" class="form-control" id="location" name="location" placeholder="Jaipur/Rajasthan">
+        </div>
+
+        <div class="col-12 mb-2">
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </div>
+    </form>

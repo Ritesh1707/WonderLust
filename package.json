@@ -1,0 +1,20 @@
+{
+  "name": "fullstack-project",
+  "version": "1.0.0",
+  "description": "Fullstck Project using Node and express",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Ritesh Nagpal",
+  "license": "ISC",
+  "dependencies": {
+    "ejs": "^3.1.9",
+    "ejs-mate": "^4.0.0",
+    "express": "^4.19.1",
+    "joi": "^17.13.1",
+    "method-override": "^3.0.0",
+    "mongoose": "^8.2.3",
+    "nodemon": "^3.1.2"
+  }
+}
