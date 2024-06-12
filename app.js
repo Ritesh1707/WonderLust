@@ -7,13 +7,40 @@ app.engine('ejs', engine);
 const methodOverride= require("method-override")
 app.use(methodOverride('_method'))
 
+const Listing =  require('./models/listing.js')
+const Review = require("./models/reviews.js");
+const User = require('./models/user.js');
+
+const flash = require("connect-flash")
+
+app.use(flash())
+const session = require("express-session")
+app.use(session({secret:"mysupersecretcode",
+  resave:false,
+  saveUninitialized:true,
+  cookie:{
+    expires :Date.now() + 24*60*60*1000,
+    maxAge: Date.now() + 24*60*60*1000,
+    httpOnly :true
+  }
+}))
+
+const passport = require('passport')
+const LocalStrategy = require('passport-local')
+const passportLocalMongoose = require('passport-local-mongoose')
+
+app.use(passport.initialize());
+app.use(passport.session());
+passport.use(new LocalStrategy(User.authenticate()))
+
+passport.serializeUser(User.serializeUser())
+passport.deserializeUser(User.deserializeUser())
+
 const wrapAsync = require('./utils/wrapAsync.js')
 const ExpressError = require('./utils/ExpressError.js')
 const { listingValidation, reviewValidation } = require('./schema.js')
 
-const Listing =  require('./models/listing.js')
-const Review = require("./models/reviews.js");
-const data = require('./init/data.js');
+
 const { log } = require('console');
 
 app.set('view engine','ejs')
@@ -52,7 +79,14 @@ function validateReview(req,res,next){
   }
 }
 
-
+app.get('/demouser', async(req,res)=>{
+  let demo = new User({
+    email : 'demomail@mail.com',
+    username : 'RiteshNagpal'
+  })
+  let bete = await User.register(demo, 'password'); 
+  res.send(bete)
+})
 
 app.get('/testListing',(req,res)=>{
   let newL = new Listing({
@@ -64,15 +98,17 @@ app.get('/testListing',(req,res)=>{
   })
   newL.save().then()
   res.send("Data saved")  
-  console.log("Data saved")  
+  console.log("Data saved")   
+})
+
+app.use((req,res,next)=>{
+  res.locals.successMsg = req.flash("success"); 
+  res.locals.errorMsg = req.flash("error");
+  next();
 })
 
 //All Listings
 //Show route
-app.get("/listing",wrapAsync(async(req,res)=>{
-  let allListing =  await Listing.find()
-  res.render('listing/index.ejs',{allListing})
-}))
 app.get("/listings",wrapAsync(async(req,res)=>{
   let allListing =  await Listing.find()
   res.render('listing/index.ejs',{allListing})
@@ -86,19 +122,24 @@ app.get("/",wrapAsync(async(req,res)=>{
 app.get("/listing/:id", wrapAsync(async(req,res)=>{
   let {id} = req.params;
   let listing = await Listing.findById(id).populate('reviews');
+  if (!listing){
+    req.flash("error","The page doesn't exist")
+    res.redirect("/")
+  }
   res.render('listing/show.ejs',{listing})
 }))
 
 //Form to add new 
 // Create route
-app.get('/listing/new',(req,res)=>{
+app.get('/listings/new',(req,res)=>{
   res.render('listing/new.ejs') 
 })
 
 app.post('/listings', validateListing, wrapAsync(async(req,res,next)=>{
-  let newData = new Listing({ ...req.body });
+  let newData = new Listing({ ...req.body });  
   await newData.save();
-  res.redirect('/listing')
+  req.flash("success", "New Listing Added");
+  res.redirect('/listings')
 }))
 
 
@@ -107,6 +148,10 @@ app.post('/listings', validateListing, wrapAsync(async(req,res,next)=>{
 app.get('/listings/:id/edit',wrapAsync(async(req,res)=>{
   let {id} = req.params;
   let listing = await Listing.findById(id);
+  if(!listing){
+  req.flash("error", "Listing you requested for does not exist");
+  res.redirect("/")
+  }
   res.render('listing/edit.ejs',{listing})
 }))
 
@@ -121,7 +166,8 @@ app.put('/listings/:id',validateListing ,wrapAsync(async(req,res)=>{
 app.get("/listings/:id/delete",wrapAsync(async(req,res)=>{
   let {id} = req.params;
   await Listing.findByIdAndDelete(id)
-  res.redirect('/listing')
+  req.flash("success", "Deleted successfully");
+  res.redirect('/listings')
 }))
 
 //Reviews
@@ -144,6 +190,34 @@ app.delete('/listings/:id/reviews/:reviewId',wrapAsync(async(req,res)=>{
   res.redirect(`/listing/${id}`) 
 }))
 
+//User router 
+app.get('/signup',wrapAsync(async(req,res)=>{
+  res.render('users/signup.ejs')
+}))
+
+app.post('/signup',wrapAsync(async(req,res)=>{
+  try{
+    let {username, password, email} = req.body;
+    let newUser = new User({email, username})
+    let result = await User.register(newUser, password);
+    console.log(result)
+    req.flash('success','Sign up successfully')
+    res.redirect('/')
+  }catch(err){
+    if(err){
+      req.flash('error',err.message)
+      res.redirect('/signup')
+    }
+  }
+}))
+
+app.get('/login',wrapAsync(async(req,res)=>{
+  res.render('users/login.ejs')
+}))
+
+app.get('/login',passport.authenticate(),wrapAsync(async(req,res)=>{
+  res.redirect('/')
+}))
 
 
 
