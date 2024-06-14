@@ -6,6 +6,7 @@ const engine = require('ejs-mate')
 app.engine('ejs', engine);
 const methodOverride= require("method-override")
 app.use(methodOverride('_method'))
+const {isLoggedIn} = require('./middleware.js')
 
 const Listing =  require('./models/listing.js')
 const Review = require("./models/reviews.js");
@@ -131,11 +132,11 @@ app.get("/listing/:id", wrapAsync(async(req,res)=>{
 
 //Form to add new 
 // Create route
-app.get('/listings/new',(req,res)=>{
+app.get('/listings/new',isLoggedIn,(req,res)=>{
   res.render('listing/new.ejs') 
 })
 
-app.post('/listings', validateListing, wrapAsync(async(req,res,next)=>{
+app.post('/listings', isLoggedIn, validateListing, wrapAsync(async(req,res,next)=>{
   let newData = new Listing({ ...req.body });  
   await newData.save();
   req.flash("success", "New Listing Added");
@@ -145,7 +146,7 @@ app.post('/listings', validateListing, wrapAsync(async(req,res,next)=>{
 
 
 //Update
-app.get('/listings/:id/edit',wrapAsync(async(req,res)=>{
+app.get('/listings/:id/edit', isLoggedIn,wrapAsync(async(req,res)=>{
   let {id} = req.params;
   let listing = await Listing.findById(id);
   if(!listing){
@@ -155,7 +156,7 @@ app.get('/listings/:id/edit',wrapAsync(async(req,res)=>{
   res.render('listing/edit.ejs',{listing})
 }))
 
-app.put('/listings/:id',validateListing ,wrapAsync(async(req,res)=>{
+app.put('/listings/:id', isLoggedIn,validateListing ,wrapAsync(async(req,res)=>{
   let {id} = req.params;
   //id not found modification
   await Listing.findByIdAndUpdate(id, {...req.body})
@@ -163,7 +164,7 @@ app.put('/listings/:id',validateListing ,wrapAsync(async(req,res)=>{
 }))
 
 //Delete 
-app.get("/listings/:id/delete",wrapAsync(async(req,res)=>{
+app.get("/listings/:id/delete",isLoggedIn,wrapAsync(async(req,res)=>{
   let {id} = req.params;
   await Listing.findByIdAndDelete(id)
   req.flash("success", "Deleted successfully");
@@ -190,6 +191,8 @@ app.delete('/listings/:id/reviews/:reviewId',wrapAsync(async(req,res)=>{
   res.redirect(`/listing/${id}`) 
 }))
 
+
+
 //User router 
 app.get('/signup',wrapAsync(async(req,res)=>{
   res.render('users/signup.ejs')
@@ -215,9 +218,20 @@ app.get('/login',wrapAsync(async(req,res)=>{
   res.render('users/login.ejs')
 }))
 
-app.get('/login',passport.authenticate(),wrapAsync(async(req,res)=>{
+app.post('/login',passport.authenticate('local',{failureRedirect:'/login', failureFlash:true}),wrapAsync(async(req,res)=>{
+  req.flash('success','Welcome back chief')
   res.redirect('/')
 }))
+
+app.get('/logout',(req,res)=>{
+  req.logout((err)=>{
+    if(err){
+      next(err);
+    }else{
+      res.redirect('/');
+    }
+  })
+})
 
 
 
