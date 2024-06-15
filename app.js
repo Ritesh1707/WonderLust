@@ -105,6 +105,7 @@ app.get('/testListing',(req,res)=>{
 app.use((req,res,next)=>{
   res.locals.successMsg = req.flash("success"); 
   res.locals.errorMsg = req.flash("error");
+  res.locals.currUser = req.user;
   next();
 })
 
@@ -202,10 +203,14 @@ app.post('/signup',wrapAsync(async(req,res)=>{
   try{
     let {username, password, email} = req.body;
     let newUser = new User({email, username})
-    let result = await User.register(newUser, password);
-    console.log(result)
-    req.flash('success','Sign up successfully')
-    res.redirect('/')
+    let registeredUser = await User.register(newUser, password);
+    req.login(registeredUser,(err)=>{
+      if(err){
+        return next(err)
+      }
+      req.flash('success','Sign up successfully')
+      res.redirect('/')
+    })
   }catch(err){
     if(err){
       req.flash('error',err.message)
