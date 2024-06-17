@@ -7,6 +7,8 @@ app.engine('ejs', engine);
 const methodOverride= require("method-override")
 app.use(methodOverride('_method'))
 const {isLoggedIn} = require('./middleware.js')
+const {savedRedirectUrl} = require('./middleware.js')
+
 
 const Listing =  require('./models/listing.js')
 const Review = require("./models/reviews.js");
@@ -223,9 +225,9 @@ app.get('/login',wrapAsync(async(req,res)=>{
   res.render('users/login.ejs')
 }))
 
-app.post('/login',passport.authenticate('local',{failureRedirect:'/login', failureFlash:true}),wrapAsync(async(req,res)=>{
+app.post('/login', savedRedirectUrl,passport.authenticate('local',{failureRedirect:'/login', failureFlash:true}),wrapAsync(async(req,res)=>{
   req.flash('success','Welcome back chief')
-  res.redirect('/')
+  res.redirect(res.locals.redirectUrl || '/');
 }))
 
 app.get('/logout',(req,res)=>{
