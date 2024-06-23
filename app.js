@@ -6,8 +6,9 @@ const engine = require('ejs-mate')
 app.engine('ejs', engine);
 const methodOverride= require("method-override")
 app.use(methodOverride('_method'))
-const {isLoggedIn} = require('./middleware.js')
-const {savedRedirectUrl} = require('./middleware.js')
+const {isLoggedIn, isReviewAuthor, isOwner, savedRedirectUrl,validateListing, validateReview} = require('./middleware.js')
+// const {validateListing, validateReview} = require('./middleware.js')
+// const {savedRedirectUrl} = require('./middleware.js')
 
 
 const Listing =  require('./models/listing.js')
@@ -62,25 +63,7 @@ app.listen(5500, ()=>{
     console.log("Server is running on port 5500");
 })
 
-function validateListing(req,res,next){
-  let result = listingValidation.validate(req.body);
-  if (result.error){
-    throw new ExpressError(400,result.error);
-  }
-  else{
-    next();
-  }
-}
 
-function validateReview(req,res,next){
-  let result = reviewValidation.validate(req.body);
-  if (result.error){
-    throw new ExpressError(400,result.error);
-  }
-  else{
-    next();
-  }
-}
 
 app.get('/demouser', async(req,res)=>{
   let demo = new User({
@@ -114,18 +97,26 @@ app.use((req,res,next)=>{
 //All Listings
 //Show route
 app.get("/listings",wrapAsync(async(req,res)=>{
-  let allListing =  await Listing.find()
+  let allListing =  await Listing.find().populate('owner')
   res.render('listing/index.ejs',{allListing})
 }))
 app.get("/",wrapAsync(async(req,res)=>{
-  let allListing =  await Listing.find()
-  res.render('listing/index.ejs',{allListing})
+  let allListing =  await Listing.find().populate('owner')
+res.render('listing/index.ejs',{allListing})
 }))
 
+// Show route
 //Specific Page 
 app.get("/listing/:id", wrapAsync(async(req,res)=>{
   let {id} = req.params;
-  let listing = await Listing.findById(id).populate('reviews');
+  let listing = await Listing.findById(id)
+  .populate('owner')
+  .populate({
+    path:'reviews',
+    populate:{
+      path:'author'
+    }
+  });
   if (!listing){
     req.flash("error","The page doesn't exist")
     res.redirect("/")
@@ -140,7 +131,9 @@ app.get('/listings/new',isLoggedIn,(req,res)=>{
 })
 
 app.post('/listings', isLoggedIn, validateListing, wrapAsync(async(req,res,next)=>{
-  let newData = new Listing({ ...req.body });  
+  // let newData = new Listing({ ...req.body});
+  // newData.owner = req.user._id;
+  let newData = new Listing({ ...req.body, owner: req.user._id}); //user info in req object is stored by passport  
   await newData.save();
   req.flash("success", "New Listing Added");
   res.redirect('/listings')
@@ -149,25 +142,25 @@ app.post('/listings', isLoggedIn, validateListing, wrapAsync(async(req,res,next)
 
 
 //Update
-app.get('/listings/:id/edit', isLoggedIn,wrapAsync(async(req,res)=>{
+app.get('/listings/:id/edit', isLoggedIn, isOwner, wrapAsync(async(req,res)=>{
   let {id} = req.params;
   let listing = await Listing.findById(id);
   if(!listing){
   req.flash("error", "Listing you requested for does not exist");
-  res.redirect("/")
+  return res.redirect("/");
   }
   res.render('listing/edit.ejs',{listing})
 }))
 
-app.put('/listings/:id', isLoggedIn,validateListing ,wrapAsync(async(req,res)=>{
-  let {id} = req.params;
-  //id not found modification
-  await Listing.findByIdAndUpdate(id, {...req.body})
-  res.redirect('/listing')
+app.put('/listings/:id', isLoggedIn, isOwner, validateListing, wrapAsync(async(req,res)=>{
+    let {id} = req.params;
+    await Listing.findByIdAndUpdate(id, {...req.body})
+    await Listing.findByIdAndUpdate(id, {...req.body})
+    res.redirect('/listings');
 }))
 
 //Delete 
-app.get("/listings/:id/delete",isLoggedIn,wrapAsync(async(req,res)=>{
+app.get("/listings/:id/delete",isLoggedIn, isOwner, wrapAsync(async(req,res)=>{
   let {id} = req.params;
   await Listing.findByIdAndDelete(id)
   req.flash("success", "Deleted successfully");
@@ -176,18 +169,18 @@ app.get("/listings/:id/delete",isLoggedIn,wrapAsync(async(req,res)=>{
 
 //Reviews
 //Post reviews route
-app.post('/listings/:id/reviews', validateReview, wrapAsync(async(req,res)=>{
-  let list = await Listing.findById(req.params.id)
-  let newReview = new Review(req.body.review)  
-  list.reviews.push(newReview)
-
-  await newReview.save()
-  await list.save()
+app.post('/listings/:id/reviews', isLoggedIn, validateReview, wrapAsync(async(req,res)=>{
+  let list = await Listing.findById(req.params.id);
+  let newReview = new Review(req.body.review);  
+  newReview.author = req.user._id;
+  list.reviews.push(newReview);
+  await newReview.save();
+  await list.save();
   res.redirect(`/listing/${req.params.id}`) 
 }))
 
 //Delete review route
-app.delete('/listings/:id/reviews/:reviewId',wrapAsync(async(req,res)=>{
+app.delete('/listings/:id/reviews/:reviewId', isLoggedIn, isReviewAuthor,wrapAsync(async(req,res)=>{
   let {id,reviewId} = req.params;
   await Review.findByIdAndDelete(reviewId)
   await Listing.findByIdAndUpdate(id, {$pull:{ reviews : reviewId  }})
