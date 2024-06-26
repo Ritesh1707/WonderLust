@@ -50,10 +50,11 @@ const listingRoutes = require('./routes/listing');
 const reviewRoutes = require('./routes/review');
 const userRoutes = require('./routes/user');
 
+
 // Using routes
 app.use('/listings', listingRoutes);
 app.use('/listings/:id',reviewRoutes);
-app.use(userRoutes);
+app.use('/',userRoutes);
 
 // Database connection
 async function main() {
