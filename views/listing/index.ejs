@@ -1,17 +1,129 @@
 <% layout('layouts/boilerplate') -%>
+  <style>
+    .filters {
+      display: flex;
+      /* align-items: center; */
+      align-content: center;
+    }
 
+    .filter {
+      text-align: center;
+      min-width: 60px;
+      margin-right: 1.5rem;
+      opacity: 0.7;
+      transition-duration: .2s;
+    }
 
+    .filter:hover {
+      opacity: 1;
+      cursor: pointer;
+      transform: scale(1.1);
+    }
 
-<div class="row row-cols-xl-4 row-cols-lg-3 row-cols-md-2 row-cols-sm-1 row-cols-xs-1">
-<% for (listing of allListing){ %>
-  <a href="/listings/<%=listing._id%>" class="card col listing-card" style="width: 18rem;">
-    <img src="<%=listing.image.url%>" class="card-img-top" alt="...">
-    <div class="card-img-overlay"></div>
-    <div class="card-body">
+    .gst {
+      display: none;
+    }
 
-      <h5 class="card-title"><%=listing.title%></h5>
-      <p class="card-text">&#8377;<%=listing.price%>/night</p>
+    .tax-toggle{
+      border: 1px solid grey;
+      text-align: center;
+      height: 2.8rem;
+      padding-inline: 1rem;
+      padding-block: .5rem;
+      border-radius: 2rem;
+      margin-left: 3rem;
+      display: flex;
+      align-items: center;
+    }
+  </style>
+  <hr>
+  <div class="filters">
+    <div class="filter">
+      <i class="fa-solid fa-fire" aria-hidden="true"></i>
+      <p>Trending</p>
     </div>
-</a>
-<% } %>
-</div>
+    <div class="filter">
+      <i class="fa-solid fa-bed" aria-hidden="true"></i>
+      <p>Trending</p>
+    </div>
+    <div class="filter">
+      <i class="fas fa-city" aria-hidden="true"></i>
+      <p>City</p>
+    </div>
+
+    <div class="filter">
+      <i class="fas fa-mountain" aria-hidden="true"></i>
+      <p>Mountain</p>
+    </div>
+
+    <div class="filter">
+      <i class="fas fa-tree" aria-hidden="true"></i>
+      <p>Forest</p>
+    </div>
+
+    <div class="filter">
+      <i class="fas fa-water" aria-hidden="true"></i>
+      <p>Beach</p>
+    </div>
+
+    <div class="filter">
+      <i class="fas fa-monument" aria-hidden="true"></i>
+      <p>Landmark</p>
+    </div>
+
+    <div class="filter">
+      <i class="fas fa-route" aria-hidden="true"></i>
+      <p>Trail</p>
+    </div>
+
+    <div class="filter">
+      <i class="fas fa-campground" aria-hidden="true"></i>
+      <p>Campground</p>
+    </div>
+
+    <div class="filter">
+      <i class="fas fa-snowflake" aria-hidden="true"></i>
+      <p>Snow</p>
+    </div>
+
+    <div class="filter">
+      <i class="fas fa-globe-americas" aria-hidden="true"></i>
+      <p>World</p>
+    </div>
+    <div class="tax-toggle">
+      <div class="form-check-reverse form-switch">
+        <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault">
+        <label class="form-check-label" for="flexSwitchCheckDefault">Display Total</label>
+      </div>
+    </div>
+  </div>
+<br>
+  <div class="row row-cols-xl-4 row-cols-lg-3 row-cols-md-2 row-cols-sm-1 row-cols-xs-1">
+    <% for (listing of allListing){ %>
+      <a href="/listings/<%=listing._id%>" class="card col listing-card" style="width: 18rem;">
+        <img src="<%=listing.image.url%>" class="card-img-top" alt="...">
+        <div class="card-img-overlay"></div>
+        <div class="card-body">
+
+          <h5 class="card-title">
+            <%=listing.title%>
+          </h5>
+          <p class="card-text">&#8377;<%=listing.price%>/night <i class="gst"> + 18%GST</i></p>
+        </div>
+      </a>
+      <% } %>
+  </div>
+
+  <script>
+    let taxSwitch = document.getElementById('flexSwitchCheckDefault');
+    taxSwitch.addEventListener('click', () => {
+      let gst = document.getElementsByClassName("gst");
+      for (g of gst) {
+        if (g.style.display != "inline") {
+          g.style.display = "inline";
+        } else {
+          g.style.display = "none";
+        }
+      }
+    })
+  </script>

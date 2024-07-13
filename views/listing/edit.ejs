@@ -1,6 +1,6 @@
 <% layout('layouts/boilerplate') -%>
 
-    <form action="/listings/<%=listing._id%>?_method=PUT" method="POST" novalidate class="needs-validation" >
+    <form action="/listings/<%=listing._id%>?_method=PUT" method="POST" novalidate class="needs-validation" enctype="multipart/form-data">
 
     <div class="col-md-8 mb-2">
         <label for="title" class="form-label">Title</label>
@@ -11,13 +11,12 @@
         <label for="description" class="form-label">Description</label>
         <textarea required class="form-control" id="description" rows="3" name="description"><%=listing.description%></textarea>
     </div>
+    <img class="card m-4 "  src=" <%= compressedUrl %> " alt="">
+    <!-- <img src="<%=compressedUrl%>" alt=""> -->
+
     <div class="col-md-8 mb-2">
-        <label for="image" class="form-label">Image Link</label>
-        <input required type="text" class="form-control" id="image" name="image[url]" placeholder="Enter the image URL" value="<%=listing.image.url%>">
-    </div>
-    <div class="col-md-8 mb-2">
-        <label for="image" class="form-label">Image Filename</label>
-        <input type="text" class="form-control" id="image" name="image[filename]" placeholder="Enter the image URL" value="<%=listing.image.filename%>">
+        <label for="image" class="form-label">Upload new Image</label>
+        <input type="file" class="form-control" id="image" name="image[url]" placeholder="Enter the image URL">
     </div>
     <div class="col-md-8 mb-6">
         <label for="price" class="form-label">Price</label>

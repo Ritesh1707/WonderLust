@@ -12,6 +12,9 @@ module.exports.renderNewForm =(req, res) => {
  
 module.exports.createListing = async (req, res) => {
   let newData = new Listing({ ...req.body, owner: req.user._id });
+  newData.image.url = req.file.path;  //Accessing it by multer
+  await newData.save();
+  req.flash('success', 'Successfully made a new listing!');
   await newData.save();
   req.flash("success", "New Listing Added");
   res.redirect('/listings');
@@ -43,14 +46,21 @@ module.exports.renderEditForm = async (req, res) => {
     req.flash("error", "Listing you requested for does not exist");
     return res.redirect("/");
   }
-  res.render('listing/edit.ejs', { listing });
+  let compressedUrl = listing.image.url.replace('/upload' ,'/upload/h_250');
+  res.render('listing/edit.ejs', { listing, compressedUrl});
 };
  
  
 module.exports.updateListing = async (req, res) => {
   let { id } = req.params;
-  await Listing.findByIdAndUpdate(id, { ...req.body });
-  res.redirect('');
+  let listing = await Listing.findByIdAndUpdate(id, { ...req.body });
+  if(typeof req.file !== "undefined"){
+    let url = req.file.path;
+    let filename = req.file.filename;
+    listing.image = {url, filename};
+    await listing.save()
+  }
+  res.redirect('/listings');
 };
  
  
