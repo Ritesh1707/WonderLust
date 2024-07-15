@@ -4,7 +4,9 @@ const initData = require("./data.js");
 const { object } = require("joi");
 
 async function main() {
-  await mongoose.connect("mongodb://127.0.0.1:27017/wonderlust");
+  // await mongoose.connect("mongodb://127.0.0.1:27017/wonderlust");
+  await mongoose.connect("mongodb+srv://riteshnagpal1707:oZ97fVP8AEeBGyAt@cluster0.60nicey.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0");
+  
 }
 
 main().then()
