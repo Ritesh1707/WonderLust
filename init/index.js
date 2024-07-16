@@ -13,9 +13,9 @@ main().then()
 
 async function initDB(){
   try{
-    // await Listing.deleteMany({})
+    await Listing.deleteMany({})
     // initData.data = initData.data.map((obj)=>({...obj, owner:'666ce6b567639390dadbebf5'}))
-    // initData.data = initData.data.map((obj)=>({...obj,owner:'6672c7a02d3506e97a99202d'}))
+    initData.data = initData.data.map((obj)=>({...obj,owner:'6695deb14ec1f101dcb4a5b5'}))
     await Listing.insertMany(initData.data)
     }
     catch(err){
@@ -25,4 +25,3 @@ async function initDB(){
 }
 
 initDB();
-module.exports = initDB;

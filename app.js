@@ -1,7 +1,7 @@
 if(process.env.NODE_DEV !='production'){
   require('dotenv').config()
 }
-const initDB = require('./init/index')
+
 const express = require('express');
 const app = express();
 const mongoose = require('mongoose');
@@ -81,7 +81,7 @@ async function main() {
   await mongoose.connect(dbUrl);
 }
 main();
-initDB();
+
 // Other routes and error handling
 
 
