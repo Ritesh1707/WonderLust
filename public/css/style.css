@@ -150,7 +150,7 @@ footer {
 }
 
 /* Mobile */
-@media screen and (max-width: 480px) {
+@media screen  and (max-width: 480px) and (min-width: 480px) {
     .card-img-top {
         height: 12rem;
     }
@@ -179,37 +179,7 @@ footer {
     }
 }
 
-@media screen and (max-width: 320px) {
-    .card-img-top {
-        height: 10rem;
-    }
-    
-    .inp-search {
-        padding: 0.3rem 0.8rem;
-        font-size: 0.9rem;
-    }
-    
-    .filter {
-        margin-right: 0.8rem;
-        min-width: 40px;
-    }
-    
-    .filter p {
-        font-size: 0.7rem;
-    }
-    
-    .card-title {
-        font-size: small;
-    }
-    
-    .card-text {
-        font-size: x-small;
-    }
-    
-    .f-info-links, .f-social {
-        gap: 0.8rem;
-    }
-}
+
 
 
 
