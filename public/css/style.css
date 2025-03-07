@@ -150,7 +150,17 @@ footer {
 }
 
 /* Mobile */
-@media screen  and (max-width: 480px) and (min-width: 480px) {
+@media screen  and (max-width: 480px) {
+    .row {
+        display: flex;
+        justify-content: center;
+    }
+    
+    .listing-card {
+        width: 80% !important;
+        margin: 0 auto !important;
+    }
+
     .card-img-top {
         height: 12rem;
     }
