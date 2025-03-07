@@ -112,7 +112,8 @@ footer {
         gap: 1rem;
     }
     .card-img-top {
-        height: 16rem;
+        height: auto;
+        width: 100% !important;
     }
     .filters {
         overflow-x: scroll;
@@ -129,7 +130,8 @@ footer {
 /* Tablet */
 @media screen and (max-width: 768px) {
     .card-img-top {
-        height: 14rem;
+        height: auto;
+        width: 100% !important;
     }
     
     footer {
@@ -175,7 +177,8 @@ footer {
     }
 
     .card-img-top {
-        height: 12rem;
+        height: auto;
+        width: 100% !important;
     }
     
     .inp-search {
@@ -231,7 +234,8 @@ footer {
     }
 
     .card-img-top {
-        height: 200px;
+        height: auto;
+        width: 100% !important;
     }
 
     .card-title {
