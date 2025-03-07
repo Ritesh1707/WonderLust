@@ -143,7 +143,38 @@ footer {
     .f-info-links, .f-social {
         justify-content: center;
     }
-    
+
+    input, textarea {
+        font-size: 16px !important; /* Prevents auto-zoom on iOS */
+    }
+    .container {
+        padding: 0 10px;
+    }
+
+    .btn {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.9rem;
+    }
+
+    input, textarea {
+        font-size: 16px !important; /* Prevents auto-zoom on iOS */
+    }
+    .customCard{
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        width: 90% !important;
+        margin: 0.5rem auto !important;
+    }
+    .listing-card{
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        width: 90% !important;
+        margin: 0.5rem auto !important;
+    }
     .filters {
         overflow-x: scroll;
         display: flex;
@@ -153,10 +184,6 @@ footer {
         scrollbar-width: none;  /* Firefox */
         -ms-overflow-style: none;  /* IE and Edge */
         padding-bottom: 1rem;
-    }
-
-    .listing-card {
-        width: 100% !important;
     }
 
     .tax-toggle {
@@ -325,46 +352,7 @@ footer {
 }
 
 /* Additional iPhone XR Specific Fixes */
-@media screen and (device-width: 414px) and (device-height: 896px) {
-    .container {
-        padding: 0 10px;
-    }
 
-    .btn {
-        padding: 0.4rem 0.8rem;
-        font-size: 0.9rem;
-    }
-
-    input, textarea {
-        font-size: 16px !important; /* Prevents auto-zoom on iOS */
-    }
-    .customCard{
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        width: 90% !important;
-        margin: 0.5rem auto !important;
-    }
-    .listing-card{
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        width: 90% !important;
-        margin: 0.5rem auto !important;
-    }
-    .filters {
-        overflow-x: scroll;
-        display: flex;
-        gap: 1rem;
-        padding-bottom: 0.5rem;
-        -webkit-overflow-scrolling: touch;
-        scrollbar-width: none;  /* Firefox */
-        -ms-overflow-style: none;  /* IE and Edge */
-        padding-bottom: 1rem;
-    }
-}
 
 
 
