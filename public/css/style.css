@@ -189,6 +189,136 @@ footer {
     }
 }
 
+/* Mobile & iPhone XR (414px) */
+@media screen and (max-width: 414px) {
+    /* Layout & Navigation */
+    .navbar-brand span {
+        font-size: 1.2rem;
+    }
+    
+    .navbar .container-fluid {
+        padding: 0.5rem;
+    }
+
+    .inp-search {
+        width: 200px;
+        font-size: 0.9rem;
+    }
+
+    /* Cards & Listings */
+    .row {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .listing-card {
+        width: 90% !important;
+        margin: 0.5rem auto !important;
+    }
+
+    .card-img-top {
+        height: 200px;
+    }
+
+    .card-title {
+        font-size: 1.1rem;
+    }
+
+    /* Forms */
+    .col-md-8 {
+        width: 100%;
+        padding: 0 1rem;
+    }
+
+    .form-control {
+        font-size: 0.9rem;
+    }
+
+    /* Show Page */
+    .card-body.ps-5 {
+        padding: 1rem !important;
+    }
+
+    .card-body.ps-5 img {
+        width: 100% !important;
+    }
+
+    /* Reviews Section */
+    .row .card.col-5 {
+        width: 100%;
+        margin: 0.5rem 0;
+    }
+
+    /* Filters */
+    .filters {
+        overflow-x: scroll;
+        padding: 0.5rem;
+        gap: 1rem;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .filter {
+        min-width: 60px;
+        margin-right: 0.8rem;
+    }
+
+    .filter i {
+        font-size: 1.2rem;
+    }
+
+    .filter p {
+        font-size: 0.7rem;
+        margin-top: 0.3rem;
+    }
+
+    /* Footer */
+    footer {
+        flex-direction: column;
+        text-align: center;
+        gap: 1rem;
+        padding: 1rem;
+    }
+
+    .footer-left {
+        flex-direction: column;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .f-info-links {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .f-social {
+        justify-content: center;
+        gap: 1.5rem;
+    }
+
+    /* Tax Toggle */
+    .tax-toggle {
+        margin: 0.5rem auto;
+        padding: 0.3rem 0.8rem;
+    }
+}
+
+/* Additional iPhone XR Specific Fixes */
+@media screen and (device-width: 414px) and (device-height: 896px) {
+    .container {
+        padding: 0 10px;
+    }
+
+    .btn {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.9rem;
+    }
+
+    input, textarea {
+        font-size: 16px !important; /* Prevents auto-zoom on iOS */
+    }
+}
+
 
 
 
